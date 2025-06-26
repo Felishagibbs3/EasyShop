@@ -41,6 +41,8 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
     public Category create(Category category)
     {
         String sqlCreate = "INSERT INTO categories (name, description) VALUES (?, ?)";
+
+        jdbcTemplate.update(sqlCreate, category.getName(), category.getDescription());
         // create a new category
         return new Category(0, category.getName(), category.getDescription());
     }

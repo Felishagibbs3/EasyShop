@@ -33,8 +33,8 @@ public class CategoriesController
 
     // @GetMapping is being implemented here to run the action to get all
     // the categories in the array list
-    @GetMapping ("/categories")
-    public List<Category> getAll()
+    @GetMapping
+    public List<Category> getAllCategories()
     {
         // find and return all categories
         return categoryDao.getAllCategories();
