@@ -1,5 +1,7 @@
 package org.yearup.data.mysql;
 
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.yearup.data.CategoryDao;
 import org.yearup.models.Category;
@@ -12,41 +14,50 @@ import java.util.List;
 @Component
 public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
 {
-    public MySqlCategoryDao(DataSource dataSource)
+    private final JdbcTemplate jdbcTemplate;
+    public MySqlCategoryDao(DataSource dataSource, JdbcTemplate jdbcTemplate)
     {
         super(dataSource);
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public List<Category> getAllCategories()
     {
+        String sql = "SELECT * FROM categories";
         // get all categories
-        return null;
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Category.class));
     }
 
     @Override
     public Category getById(int categoryId)
     {
+        String sqlId = "SELECT * FROM categories WHERE category_id = ?";
         // get category by id
-        return null;
+        return jdbcTemplate.queryForObject(sqlId, new BeanPropertyRowMapper<>(Category.class), categoryId);
     }
 
     @Override
     public Category create(Category category)
     {
+        String sqlCreate = "INSERT INTO categories (name, description) VALUES (?, ?)";
         // create a new category
-        return null;
+        return new Category(0, category.getName(), category.getDescription());
     }
 
     @Override
     public void update(int categoryId, Category category)
     {
+        String sqlUpdate = "UPDATE categories SET name = ?, description = ? WHERE category_id = ?";
+        jdbcTemplate.update(sqlUpdate, category.getName(), category.getDescription(), categoryId);
         // update category
     }
 
     @Override
     public void delete(int categoryId)
     {
+        String sqlDelete = "DELETE FROM categories WHERE category_id = ?";
+        jdbcTemplate.update(sqlDelete, categoryId);
         // delete category
     }
 
