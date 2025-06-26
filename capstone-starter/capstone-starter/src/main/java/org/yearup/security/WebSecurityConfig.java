@@ -26,36 +26,36 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final UserModelDetailsService userModelDetailsService;
-    private final PasswordEncoder passwordEncoder;
+
 
     public WebSecurityConfig(
             TokenProvider tokenProvider,
             JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
             JwtAccessDeniedHandler jwtAccessDeniedHandler,
-            UserModelDetailsService userModelDetailsService, PasswordEncoder passwordEncoder
+            UserModelDetailsService userModelDetailsService
     ) {
         this.tokenProvider = tokenProvider;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
         this.userModelDetailsService = userModelDetailsService;
-        this.passwordEncoder = passwordEncoder;
+
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+    @Override
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationManagerBuilder authorize) throws Exception{
-        authorize.authenticationProvider(authenticationProvider());
+    public AuthenticationManager authenticationManagerBean () throws Exception{
 
-        return authorize.build();
+        return super.authenticationManagerBean();
     }
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService());
-        provider.setPasswordEncoder(passwordEncoder);
+        provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
 
