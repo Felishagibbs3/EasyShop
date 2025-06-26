@@ -102,6 +102,7 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
 
             if (row.next())
             {
+                System.out.println("We found a product with that ID: " + productId);
                 return mapRow(row);
             }
         }
@@ -212,13 +213,24 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
     {
         int productId = row.getInt("product_id");
         String name = row.getString("name");
+
         BigDecimal price = row.getBigDecimal("price");
+        if (row.wasNull()) price = BigDecimal.ZERO;
+
         int categoryId = row.getInt("category_id");
+
         String description = row.getString("description");
+        if (description == null) description = "";
+
         String color = row.getString("color");
+        if (color == null) color = "";
+
         int stock = row.getInt("stock");
         boolean isFeatured = row.getBoolean("featured");
+
         String imageUrl = row.getString("image_url");
+        if (imageUrl == null) imageUrl = "";
+        System.out.println("Here's what we found with that ProductId" + productId);
 
         return new Product(productId, name, price, categoryId, description, color, stock, isFeatured, imageUrl);
     }
