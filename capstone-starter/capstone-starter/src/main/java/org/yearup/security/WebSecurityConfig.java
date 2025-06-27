@@ -1,10 +1,5 @@
 package org.yearup.security;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.yearup.security.jwt.JWTConfigurer;
 import org.yearup.security.jwt.TokenProvider;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-@Configuration
+
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -26,7 +21,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final UserModelDetailsService userModelDetailsService;
-
 
     public WebSecurityConfig(
             TokenProvider tokenProvider,
@@ -38,25 +32,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
         this.userModelDetailsService = userModelDetailsService;
-
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-    @Override
-    @Bean
-    public AuthenticationManager authenticationManagerBean () throws Exception{
-
-        return super.authenticationManagerBean();
-    }
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService());
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
     }
 
     /**
@@ -88,18 +68,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and()
-                .authorizeRequests()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/register").permitAll()
-
-                .and()
                 .apply(securityConfigurerAdapter());
     }
-
-
 
     private JWTConfigurer securityConfigurerAdapter() {
         return new JWTConfigurer(tokenProvider);
     }
 }
+
+
 
