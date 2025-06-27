@@ -19,10 +19,7 @@ Key Features :
   - Category
   - Price Range
   - Color
-  
 
-
-    
 
 🐞 Bugs Found & How We Solved Them
 🐛 Bug 1: Products were not found
